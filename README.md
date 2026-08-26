@@ -1,14 +1,26 @@
 # ADKP_ingress_stage_1
 
-Reusable tooling for entering and updating rows in the ADKP Portal Studies
-Table ([syn17083367](https://www.synapse.org/Synapse:syn17083367/tables/)),
-which drives the study detail pages on the AD Knowledge Portal.
+Tooling for ADKP data ingress, stage 1.
 
 ## Layout
 
-Code is grouped by tool first, then by language, since the Python and R
-versions are meant to be equivalent implementations of the same tool kept in
-sync with each other (see below) rather than independent projects:
+Code is grouped by tool first, then by language (for tools with equivalent
+implementations in more than one language, kept in sync with each other -
+see each tool's own section below for details):
+
+```
+<tool-name>/
+  python/...
+  r/...
+```
+
+## Tools
+
+### Portal Studies Table
+
+Reusable tooling for entering and updating rows in the ADKP Portal Studies
+Table ([syn17083367](https://www.synapse.org/Synapse:syn17083367/tables/)),
+which drives the study detail pages on the AD Knowledge Portal.
 
 ```
 portal-studies-table/
@@ -16,10 +28,7 @@ portal-studies-table/
   r/adkp_studies_table.R
 ```
 
-Future tools for other ingress stages/tables can follow the same pattern
-(`<tool-name>/python/`, `<tool-name>/r/`) alongside `portal-studies-table/`.
-
-## Using a script
+#### Using a script
 
 Each file is a standalone, edit-and-run script:
 
@@ -33,7 +42,7 @@ Each file is a standalone, edit-and-run script:
 See the docstring/header comment at the top of each file for setup details
 (package installation, Synapse authentication).
 
-## Keeping the Python and R versions in sync
+#### Keeping the Python and R versions in sync
 
 Both files independently encode the same schema and SOP business rules
 (column names/limits, controlled vocabularies, deprecated columns, the
