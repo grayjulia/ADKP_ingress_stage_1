@@ -1,0 +1,25 @@
+name: Check Python/R sync
+
+on:
+  push:
+    paths:
+      - "portal-studies-table/**"
+      - "scripts/**"
+  pull_request:
+    paths:
+      - "portal-studies-table/**"
+      - "scripts/**"
+
+jobs:
+  check-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - name: Install rjson
+        run: Rscript -e 'install.packages("rjson", repos = "https://cloud.r-project.org")'
+
+      - name: Run sync check
+        run: python3 scripts/check_sync.py
