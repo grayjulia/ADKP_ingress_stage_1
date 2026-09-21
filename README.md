@@ -173,36 +173,34 @@ vocabulary, the SOP guidance text, a reference ID, etc.), update it in both
 `adkp_studies_table.py` and `adkp_studies_table.R`, then run the sync check
 before committing.**
 
-#### Wiki Order
+#### Alphabetize Wiki
 
 A separate script from `adkp_studies_table.py`/`.R` above, but part of the
 same process: **run this whenever an acknowledgement statement is added to
-the Portal Studies Table**, to keep the corresponding wiki page's sub-pages
-alphabetized. It alphabetizes the sub-pages under one wiki page without
-disturbing the ordering of any other page in the tree. Synapse wiki pages
-have a single tree-wide order hint (a flat list of every page id) rather
-than a per-parent order field, so re-sorting just one parent's children
-means finding the contiguous slice of that list its current children occupy
-and replacing only that slice - this script does that.
+the Portal Studies Table**, to keep the Acknowledgment Statements wiki
+page's sub-pages alphabetized. Unlike the other tools in this repo, it's a
+one-off script hardcoded to that specific page (owner `syn12666371`, wiki id
+`602387`) rather than a generic reusable tool - there's only one such page,
+and neither id identifies any investigator or study-specific data.
+
+Synapse wiki pages have a single tree-wide order hint (a flat list of every
+page id) rather than a per-parent order field, so re-sorting just one
+parent's children means finding the contiguous slice of that list its
+current children occupy and replacing only that slice - this script does
+that.
 
 ```
-wiki-order/
+alphabetize-wiki/
   python/alphabetize_acknowledgement_statements.py
   python/requirements.txt
 ```
 
 ##### Using the script
 
-1. `pip install -r wiki-order/python/requirements.txt`
+1. `pip install -r alphabetize-wiki/python/requirements.txt`
 2. Authenticate via `synapse config` (~/.synapseConfig) or the
    `SYNAPSE_AUTH_TOKEN` env var - never hardcode credentials in the script.
-3. Edit the `CONFIG` dict near the top of
-   `alphabetize_acknowledgement_statements.py` - the owner entity id and the
-   wiki id of the parent page whose children you want alphabetized (find the
-   latter via `syn.getWikiHeaders(owner=owner_id)`).
-4. Run it (`python alphabetize_acknowledgement_statements.py`). It always
-   prints the current vs. proposed order for review; it only writes to
-   Synapse if `CONFIG["dry_run"]` is `False`.
+3. Run it (`python alphabetize_acknowledgement_statements.py`).
 
 Note: this uses `syn.getWikiHeaders()` (the `/wikiheadertree` endpoint)
 rather than the newer `synapseclient.models.WikiHeader.get()`
