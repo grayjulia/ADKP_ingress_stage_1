@@ -4,11 +4,9 @@ on:
   push:
     paths:
       - "portal-studies-table/**"
-      - "scripts/**"
   pull_request:
     paths:
       - "portal-studies-table/**"
-      - "scripts/**"
 
 jobs:
   check-sync:
@@ -22,4 +20,4 @@ jobs:
         run: Rscript -e 'install.packages("rjson", repos = "https://cloud.r-project.org")'
 
       - name: Run sync check
-        run: python3 scripts/check_sync.py
+        run: python3 portal-studies-table/scripts/check_sync.py

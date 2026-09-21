@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 # Extracts the "must stay in sync" constants from portal-studies-table/r/adkp_studies_table.R
-# and prints them as a single JSON object to stdout. Used by scripts/check_sync.py
-# to verify the R and Python versions of the ADKP Portal Studies Table tool
-# haven't drifted apart.
+# and prints them as a single JSON object to stdout. Used by
+# portal-studies-table/scripts/check_sync.py to verify the R and Python
+# versions of the ADKP Portal Studies Table tool haven't drifted apart.
 #
 # Deliberately does NOT require synapser (or the Python bridge it needs) - it
 # strips the library(synapser) line and everything from the auto-run block

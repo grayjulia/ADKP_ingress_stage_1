@@ -16,7 +16,7 @@ lightweight "rjson" package - NOT synapseclient/pandas/synapser - since it
 extracts constants without importing/sourcing either file's Synapse-touching
 code.
 
-Usage: python3 scripts/check_sync.py
+Usage: python3 portal-studies-table/scripts/check_sync.py
 Exit code 0 if in sync, 1 if not (or if either file fails to parse).
 """
 
@@ -25,9 +25,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-PY_FILE = REPO_ROOT / "portal-studies-table" / "python" / "adkp_studies_table.py"
-R_FILE = REPO_ROOT / "portal-studies-table" / "r" / "adkp_studies_table.R"
+PORTAL_STUDIES_TABLE_DIR = Path(__file__).resolve().parent.parent
+PY_FILE = PORTAL_STUDIES_TABLE_DIR / "python" / "adkp_studies_table.py"
+R_FILE = PORTAL_STUDIES_TABLE_DIR / "r" / "adkp_studies_table.R"
 DUMP_R_SCRIPT = Path(__file__).resolve().parent / "dump_r_constants.R"
 
 KEYS = [
