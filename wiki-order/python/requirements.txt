@@ -1,0 +1,1 @@
+synapseclient>=4.11.0  # needs the WikiOrderHint model (synapseclient.models) used by this script

@@ -172,3 +172,40 @@ push or PR that touches `portal-studies-table/`.
 vocabulary, the SOP guidance text, a reference ID, etc.), update it in both
 `adkp_studies_table.py` and `adkp_studies_table.R`, then run the sync check
 before committing.**
+
+#### Wiki Order
+
+A separate script from `adkp_studies_table.py`/`.R` above, but part of the
+same process: **run this whenever an acknowledgement statement is added to
+the Portal Studies Table**, to keep the corresponding wiki page's sub-pages
+alphabetized. It alphabetizes the sub-pages under one wiki page without
+disturbing the ordering of any other page in the tree. Synapse wiki pages
+have a single tree-wide order hint (a flat list of every page id) rather
+than a per-parent order field, so re-sorting just one parent's children
+means finding the contiguous slice of that list its current children occupy
+and replacing only that slice - this script does that.
+
+```
+wiki-order/
+  python/alphabetize_acknowledgement_statements.py
+  python/requirements.txt
+```
+
+##### Using the script
+
+1. `pip install -r wiki-order/python/requirements.txt`
+2. Authenticate via `synapse config` (~/.synapseConfig) or the
+   `SYNAPSE_AUTH_TOKEN` env var - never hardcode credentials in the script.
+3. Edit the `CONFIG` dict near the top of
+   `alphabetize_acknowledgement_statements.py` - the owner entity id and the
+   wiki id of the parent page whose children you want alphabetized (find the
+   latter via `syn.getWikiHeaders(owner=owner_id)`).
+4. Run it (`python alphabetize_acknowledgement_statements.py`). It always
+   prints the current vs. proposed order for review; it only writes to
+   Synapse if `CONFIG["dry_run"]` is `False`.
+
+Note: this uses `syn.getWikiHeaders()` (the `/wikiheadertree` endpoint)
+rather than the newer `synapseclient.models.WikiHeader.get()`
+(`/wikiheadertree2`) - the v2 endpoint has been observed to lag behind on
+very recently created pages, silently omitting them from the tree and
+therefore from the re-sort.
