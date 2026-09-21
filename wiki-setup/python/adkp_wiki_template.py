@@ -45,22 +45,22 @@ Use as a library:
     # create/update plan, writes nothing to Synapse.
     create_or_update_wiki(
         syn,
-        owner_id="syn12666371",
+        owner_id="syn00000000",
         title="Acknowledgement - EXAMPLE",
         content_path="acknowledgement_example.html",
-        parent_id="617506",  # only used when creating a brand-new page
+        parent_id="00000000",  # only used when creating a brand-new page
         dry_run=True,
     )
 
     # Looks right -> push for real.
     create_or_update_wiki(
-        syn, owner_id="syn12666371", title="Acknowledgement - EXAMPLE",
-        content_path="acknowledgement_example.html", parent_id="617506",
+        syn, owner_id="syn00000000", title="Acknowledgement - EXAMPLE",
+        content_path="acknowledgement_example.html", parent_id="00000000",
     )
 
 Or from the command line:
-    python adkp_wiki_template.py syn12666371 "Acknowledgement - EXAMPLE" \\
-        acknowledgement_example.html --parent-id 617506 --dry-run
+    python adkp_wiki_template.py syn00000000 "Acknowledgement - EXAMPLE" \\
+        acknowledgement_example.html --parent-id 00000000 --dry-run
 
 GETTING A CONTENT FILE FROM A CONTRIBUTOR'S JIRA TICKET
     Contributors often submit this text as a Jira ticket field rather than a
@@ -103,16 +103,6 @@ import tempfile
 import synapseclient
 from synapseclient.core.exceptions import SynapseHTTPError
 from synapseclient.models import WikiPage
-
-# Jira custom field ids on the Sage Bionetworks Jira (ADEL project), confirmed
-# via the Jira REST API's `names` expansion on ADEL-806, 2026-09-21. Custom
-# field ids are per-Jira-instance, not per-ticket, so these should hold for
-# other ADEL tickets using the same intake form - but if a fetch comes back
-# empty/None for a field, re-check the `names` mapping for that ticket rather
-# than assuming the field is just unpopulated.
-ADEL_STUDY_DESCRIPTION_FIELD = "customfield_12279"
-ADEL_METHODS_DESCRIPTION_FIELD = "customfield_12280"
-ADEL_ACKNOWLEDGMENT_STATEMENT_FIELD = "customfield_12265"
 
 
 def login(auth_token=None):
@@ -276,8 +266,13 @@ def fetch_jira_rendered_fields(issue_key, field_ids, base_url="https://sagebione
     aren't given - do not hardcode credentials in this file.
 
     Arguments:
-        issue_key: e.g. "ADEL-806"
-        field_ids: Jira field ids to fetch, e.g. [ADEL_STUDY_DESCRIPTION_FIELD]
+        issue_key: e.g. "PROJ-123"
+        field_ids: Jira field ids to fetch, e.g. ["customfield_10050"]. To find
+            the field id for a given field label on your Jira instance, fetch
+            any issue with expand="names" (or check your project's field
+            configuration) and read off its `names` mapping - field ids are
+            per-Jira-instance/project, not per-ticket, so look them up once
+            and reuse them.
         base_url: the Jira Cloud site
         email, api_token: Jira Cloud API auth (HTTP Basic: email + token)
 

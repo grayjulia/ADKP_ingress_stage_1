@@ -52,7 +52,7 @@ actually needed (e.g. `ensure` is a no-op if the folder already exists):
 
 ```python
 "folder_plan": [
-    {"action": "ensure", "parent": "syn...", "name": "eCLIP_raw"},   # create if missing
+    {"action": "ensure", "parent": "syn...", "name": "example_folder"},   # create if missing
     {"action": "rename", "target": "syn...", "name": "new_name"},
     {"action": "move",   "target": "syn...", "new_parent": "syn..."},
     {"action": "remove", "target": "syn..."},                        # only if the folder is empty

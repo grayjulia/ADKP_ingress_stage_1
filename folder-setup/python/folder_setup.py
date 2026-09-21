@@ -100,16 +100,16 @@ CONFIG = {
     #   {"action": "remove",  "target": "syn..."}                                - delete, only if empty
     # Fill this in once the contributor responds about the folder structure they need.
     "folder_plan": [
-        # {"action": "ensure", "parent": "syn68174819", "name": "eCLIP_raw"},
-        # {"action": "ensure", "parent": "syn68174819", "name": "eCLIP_processed"},
+        # {"action": "ensure", "parent": "syn00000000", "name": "example_folder_1"},
+        # {"action": "ensure", "parent": "syn00000000", "name": "example_folder_2"},
     ],
 
     # Files to upload once target folders exist. Each item:
     #   {"target_folder_id": "syn...", "local_dir": "/path/to/files"}
     # or, to reference a folder created by folder_plan above by name:
-    #   {"target_folder_name": "eCLIP_raw", "under": "syn68174819", "local_dir": "/path/to/files"}
+    #   {"target_folder_name": "example_folder_1", "under": "syn00000000", "local_dir": "/path/to/files"}
     "upload_plan": [
-        # {"target_folder_name": "eCLIP_raw", "under": "syn68174819", "local_dir": "/path/to/raw"},
+        # {"target_folder_name": "example_folder_1", "under": "syn00000000", "local_dir": "/path/to/raw"},
     ],
 }
 
@@ -469,7 +469,7 @@ def upload_files(syn, target_folder_id, local_dir, ticket_id, ticket_url):
     configured for it - see check_storage_location() for the pre-flight gate on
     that). Skips files whose name and MD5 already match an existing file in that
     folder (idempotent re-run). Verifies the checksum Synapse reports back matches
-    the local one, and attaches provenance (Activity) referencing the ADEL ticket.
+    the local one, and attaches provenance (Activity) referencing the ticket.
     Logs each action.
     """
     existing_by_name = {}
