@@ -1,0 +1,4 @@
+synapseclient>=4.0.0
+# boto3 is only needed if check_storage_location() reports an external/STS
+# storage location and CONFIG["external_storage_confirmed"] is set True -
+# not required for the default Synapse-storage path.

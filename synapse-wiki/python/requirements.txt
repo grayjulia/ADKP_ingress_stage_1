@@ -1,0 +1,2 @@
+synapseclient>=4.11.0  # needs the WikiPage model (synapseclient.models) used by this script
+requests               # only needed for fetch_jira_rendered_fields() - the Jira REST API pull

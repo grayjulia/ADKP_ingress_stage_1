@@ -16,6 +16,89 @@ see each tool's own section below for details):
 
 ## Tools
 
+### Data Ingress
+
+Reusable tooling for auditing a study's Synapse folder tree and permissions,
+safely creating/renaming/moving/removing staging folders, and uploading
+contributor files with checksum verification and provenance - for any ADKP
+data ingress ticket (ADEL-806 is the first use case, but it's not hardcoded
+to that ticket or to any particular folder arrangement).
+
+```
+data-ingress/
+  python/folder_setup.py
+  python/requirements.txt
+```
+
+#### Using the script
+
+1. `pip install -r data-ingress/python/requirements.txt`
+2. Authenticate via `synapse config` (~/.synapseConfig) or the
+   `SYNAPSE_AUTH_TOKEN` env var - never hardcode credentials in the script.
+3. Edit the `CONFIG` dict near the top of `folder_setup.py` (ticket ID,
+   root Synapse ID, and - once known - `folder_plan`/`upload_plan`). Leave
+   `folder_plan`/`upload_plan` empty to run in audit-only mode.
+4. Run it (`python folder_setup.py`). It always prints the current
+   folder tree, a permission audit, and a storage-location check; it only
+   writes to Synapse if `CONFIG["dry_run"]` is `False` and there are no
+   `ERROR`-level issues.
+
+See the module docstring and the `SOP_NOTES` dict at the top of the file for
+the SOP/security reasoning behind each check (private-folder enforcement,
+HTTPS assertion, the `scicomp`-only rule for any external AWS storage
+location). Different portals/programs structure their Synapse folders very
+differently (ADKP nested Staging/Data, ELITE flattened, GENIE
+Test/Staging/Production projects, versioned `vN_ingest` folders elsewhere) -
+this script never assumes a particular shape, it audits whatever tree
+actually exists under the configured root and only changes what
+`folder_plan` explicitly declares.
+
+### Synapse Wiki
+
+Reusable tooling for creating and updating Synapse Wiki pages (root pages and
+sub-pages) - e.g. a study's main wiki, its Methods sub-page, or an
+Acknowledgement sub-page - while preserving contributor-submitted HTML
+formatting (links, superscript, subscript, etc.) exactly as written. Includes
+an optional helper to pull a contributor's text straight from a Jira ticket
+field as Jira's own rendered HTML, avoiding a manual copy/paste step.
+
+```
+synapse-wiki/
+  python/adkp_wiki_template.py
+  python/requirements.txt
+```
+
+#### Using the script
+
+This one is meant to be imported, not edited-and-run (owner/title/content
+vary per call, unlike the single-row scripts above):
+
+```python
+from adkp_wiki_template import login, create_or_update_wiki
+
+syn = login()
+
+# Preview first: opens the content file in your browser and prints the
+# create/update plan: writes nothing to Synapse.
+create_or_update_wiki(
+    syn, owner_id="syn...", title="...", content_path="content.html",
+    parent_id=None,  # only used when creating a brand-new page
+    dry_run=True,
+)
+
+# Looks right -> push for real.
+create_or_update_wiki(syn, owner_id="syn...", title="...", content_path="content.html")
+```
+
+It also works from the command line (`python adkp_wiki_template.py --help`),
+and as a standalone Jira-to-Synapse pull via `fetch_jira_rendered_fields()` /
+`save_jira_field()` for teams with a Jira API token. See the module
+docstring for full details, including why content is always passed as a
+**file path** rather than an inline string (the only mode that preserves the
+contributor's HTML byte-for-byte), and the fallback import paths (browser
+DevTools copy, Word/Google Docs round-trip) for when Jira API access isn't
+available.
+
 ### Portal Studies Table
 
 Reusable tooling for entering and updating rows in the ADKP Portal Studies
